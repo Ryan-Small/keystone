@@ -9,12 +9,12 @@ on:
 jobs:
   backend-tests:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install just
+        uses: extractions/setup-just@v2
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -27,19 +27,19 @@ jobs:
           python-version: "3.14"
 
       - name: Install backend dependencies
-        run: uv sync --dev
+        run: just install-backend
 
       - name: Run backend unit tests
-        run: uv run pytest -v
+        run: just test-backend
 
   frontend-tests:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install just
+        uses: extractions/setup-just@v2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -49,10 +49,10 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install frontend dependencies
-        run: npm ci
+        run: just install-frontend
 
       - name: Run frontend unit tests
-        run: npm test
+        run: just test-frontend
 
   e2e-tests:
     runs-on: ubuntu-latest
@@ -60,6 +60,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install just
+        uses: extractions/setup-just@v2
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -79,20 +82,17 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install E2E dependencies
-        run: cd e2e && uv sync
-
-      - name: Install Playwright browsers
-        run: cd e2e && uv run playwright install chromium --with-deps
+        run: just install-e2e
 
       - name: Start services with Docker Compose
-        run: docker compose up -d
+        run: just dev -d
 
       - name: Wait for services to be ready
         run: npx wait-on http-get://localhost:8000 http-get://localhost:4200 -t 60000
 
       - name: Run E2E tests
-        run: cd e2e && uv run behave
+        run: just e2e-headless
 
       - name: Stop services
         if: always()
-        run: docker compose down
+        run: just down

@@ -1,10 +1,13 @@
+import os
 from playwright.sync_api import sync_playwright
 
 
 def before_all(context) -> None:
     """Setup before all tests."""
     context.playwright = sync_playwright().start()
-    context.browser = context.playwright.chromium.launch(headless=True)
+    # Set HEADLESS=false to see the browser
+    headless = os.getenv("HEADLESS", "true").lower() == "true"
+    context.browser = context.playwright.chromium.launch(headless=headless)
 
 
 def after_all(context) -> None:

@@ -2,6 +2,23 @@
 
 Full-stack greeting application with BDD E2E testing.
 
+## Prerequisites
+
+- [just](https://github.com/casey/just) - Command runner
+  ```bash
+  # macOS
+  brew install just
+
+  # Linux
+  curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+
+  # Or via cargo
+  cargo install just
+  ```
+- Docker & Docker Compose
+- Python 3.14+ (for local development without Docker)
+- Node.js 20+ (for local development without Docker)
+
 ## Structure
 
 ```
@@ -14,10 +31,46 @@ keystone/
 └── .github/workflows/    # CI pipeline
 ```
 
+## Quick Start
+
+```bash
+# Install dependencies
+just install
+
+# Start development environment with Docker
+just dev
+
+# Run all tests
+just test
+
+# Run E2E tests with visible browser
+just e2e
+
+# See all available commands
+just --list
+```
+
 ## Development
 
-### Backend
+### Using Docker (Recommended)
 
+```bash
+just dev              # Start all services
+just logs             # View all logs
+just logs backend     # View backend logs only
+just down             # Stop services
+```
+
+### Manual Setup
+
+#### Backend
+
+```bash
+just install-backend
+just dev-backend      # Runs on http://localhost:8000
+```
+
+Or manually:
 ```bash
 cd backend
 uv sync --dev
@@ -26,64 +79,41 @@ uv run uvicorn main:app --reload --port 8000
 
 Run unit tests:
 ```bash
-cd backend
-uv run pytest -v
+just test-backend
 ```
 
-### Frontend
+#### Frontend
 
+```bash
+just install-frontend
+just dev-frontend     # Runs on http://localhost:4200, proxies /api to backend
+```
+
+Or manually:
 ```bash
 cd frontend
 npm install
-npm start  # Runs on http://localhost:4200, proxies /api to backend
+npm start
 ```
 
 The frontend uses a proxy configuration to route `/api/*` requests to `http://localhost:8000` during development.
 
 Run unit tests:
 ```bash
-cd frontend
-npm test
+just test-frontend
 ```
 
 ### E2E Tests
 
-#### Option 1: Using Docker Compose (Recommended)
-
 ```bash
-# Start services
-docker-compose up -d
+# With Docker (recommended)
+just dev-bg           # Start services in background
+just e2e              # Run with visible browser
+just e2e-headless     # Run headless
+just down             # Stop services
 
-# Run E2E tests
-cd e2e
-uv sync
-uv run playwright install chromium
-uv run behave
-
-# Stop services
-docker-compose down
-```
-
-#### Option 2: Manual
-
-Terminal 1:
-```bash
-cd backend
-uv run uvicorn main:app --port 8000
-```
-
-Terminal 2:
-```bash
-cd frontend
-npm start
-```
-
-Terminal 3:
-```bash
-cd e2e
-uv sync
-uv run playwright install chromium
-uv run behave
+# Manual (requires backend + frontend running)
+just e2e
 ```
 
 ## CI/CD
