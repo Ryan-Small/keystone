@@ -1,0 +1,20 @@
+<div class="container">
+  <h1>{{ title() }}</h1>
+
+  <div class="greeting-form">
+    <input
+      type="text"
+      [(ngModel)]="name"
+      placeholder="Enter your name (optional)"
+      class="name-input"
+      id="nameInput"
+    />
+    <button (click)="getGreeting()" class="greet-button" id="greetButton">
+      Get Greeting
+    </button>
+  </div>
+
+  @if (greeting()) {
+    <div class="greeting-result" id="greetingResult">{{ greeting() }}</div>
+  }
+</div>

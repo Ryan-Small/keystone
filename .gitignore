@@ -3,8 +3,19 @@ __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
-.venv/
-venv/
+backend/.venv/
+backend/venv/
+e2e/.venv/
+e2e/venv/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
 
 # IDE
 .idea/
+
+# E2E
+e2e/reports/
+e2e/screenshots/

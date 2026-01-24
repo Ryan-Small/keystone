@@ -1,0 +1,9 @@
+[project]
+name = "keystone-e2e"
+version = "0.1.0"
+description = "E2E BDD tests for Keystone"
+requires-python = ">=3.14"
+dependencies = [
+    "behave>=1.2.6",
+    "playwright>=1.49.1",
+]
