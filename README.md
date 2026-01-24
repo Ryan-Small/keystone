@@ -48,7 +48,23 @@ npm test
 
 ### E2E Tests
 
-Requires both backend and frontend running.
+#### Option 1: Using Docker Compose (Recommended)
+
+```bash
+# Start services
+docker-compose up -d
+
+# Run E2E tests
+cd e2e
+uv sync
+uv run playwright install chromium
+uv run behave
+
+# Stop services
+docker-compose down
+```
+
+#### Option 2: Manual
 
 Terminal 1:
 ```bash
