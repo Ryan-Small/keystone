@@ -31,12 +31,25 @@ def after_scenario(context, scenario) -> None:
     """Cleanup after each scenario."""
     # Take screenshot on failure
     if scenario.status == "failed":
-        screenshot_name = f"{context.scenario_name.replace(' ', '_')}_FAILED.png"
+        screenshot_name = f"{_sanitize_filename(context.scenario_name)}_FAILED.png"
         screenshot_path = context.screenshots_dir / screenshot_name
         context.page.screenshot(path=str(screenshot_path))
         print(f"Screenshot saved: {screenshot_path}")
 
     context.page.close()
+
+
+def _sanitize_filename(name: str) -> str:
+    """Sanitize filename by removing invalid characters."""
+    # Replace invalid characters with underscores
+    invalid_chars = '":<>|*?\r\n'
+    for char in invalid_chars:
+        name = name.replace(char, '_')
+    # Replace spaces with underscores and collapse multiple underscores
+    name = name.replace(' ', '_')
+    while '__' in name:
+        name = name.replace('__', '_')
+    return name
 
 
 def after_step(context, step) -> None:
@@ -54,8 +67,8 @@ def after_step(context, step) -> None:
 
     if should_screenshot:
         # Save to screenshots directory
-        step_name = f"{context.scenario_name}_{step.keyword.strip()}_{step.name}".replace(' ', '_')
-        screenshot_name = f"{step_name}.png"
+        step_name = f"{context.scenario_name}_{step.keyword.strip()}_{step.name}"
+        screenshot_name = f"{_sanitize_filename(step_name)}.png"
         screenshot_path = context.screenshots_dir / screenshot_name
         context.page.screenshot(path=str(screenshot_path))
         print(f"Step screenshot saved: {screenshot_path}")

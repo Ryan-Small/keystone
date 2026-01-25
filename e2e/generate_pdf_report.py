@@ -147,13 +147,26 @@ class TestReportGenerator:
         self.story.append(summary_table)
         self.story.append(PageBreak())
 
+    def _sanitize_filename(self, name: str) -> str:
+        """Sanitize filename by removing invalid characters."""
+        # Replace invalid characters with underscores
+        invalid_chars = '":<>|*?\r\n'
+        for char in invalid_chars:
+            name = name.replace(char, '_')
+        # Replace spaces with underscores and collapse multiple underscores
+        name = name.replace(' ', '_')
+        while '__' in name:
+            name = name.replace('__', '_')
+        return name
+
     def _find_screenshot(self, scenario_name: str, step_keyword: str, step_name: str) -> Path | None:
         """Find screenshot for a step."""
         # Match the naming pattern from environment.py
-        step_screenshot = f"{scenario_name}_{step_keyword}_{step_name}".replace(" ", "_")
+        step_screenshot = f"{scenario_name}_{step_keyword}_{step_name}"
+        sanitized = self._sanitize_filename(step_screenshot)
 
         for ext in [".png", ".jpg", ".jpeg"]:
-            screenshot_path = self.screenshots_dir / f"{step_screenshot}{ext}"
+            screenshot_path = self.screenshots_dir / f"{sanitized}{ext}"
             if screenshot_path.exists():
                 return screenshot_path
 
