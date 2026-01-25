@@ -69,6 +69,9 @@ test-frontend +FLAGS="":
 #   just e2e                     # Headless mode
 #   just e2e false               # With visible browser
 #   just e2e true --tags=@smoke  # Headless with tags
+#   SCREENSHOT_STEPS=then just e2e   # Screenshot "Then" steps (default)
+#   SCREENSHOT_STEPS=all just e2e    # Screenshot every step
+#   SCREENSHOT_STEPS=false just e2e  # No step screenshots
 e2e headless="true" +FLAGS="":
     cd e2e && HEADLESS={{headless}} uv run behave {{FLAGS}}
 
@@ -77,6 +80,26 @@ e2e-headless: (e2e "true")
 
 # Shortcut for headed E2E tests
 e2e-headed: (e2e "false")
+
+# Run E2E tests and generate PDF report for change management
+# Examples:
+#   just e2e-pdf              # Generate PDF report
+#   just e2e-pdf false        # With visible browser
+e2e-pdf headless="true":
+    #!/usr/bin/env bash
+    set -e
+    mkdir -p e2e/reports
+    cd e2e
+    HEADLESS={{headless}} uv run behave \
+        --format json \
+        --outfile reports/behave-results.json \
+        --format pretty
+    uv run python generate_pdf_report.py
+    cd ..
+    echo "PDF report generated: e2e/reports/test-report.pdf"
+    if command -v open &> /dev/null; then \
+        open e2e/reports/test-report.pdf; \
+    fi
 
 # =============================================================================
 # Installation

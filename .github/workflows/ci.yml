@@ -90,8 +90,25 @@ jobs:
       - name: Wait for services to be ready
         run: npx wait-on http-get://localhost:8000 http-get://localhost:4200 -t 60000
 
-      - name: Run E2E tests
-        run: just e2e-headless
+      - name: Run E2E tests and generate PDF report
+        run: just e2e-pdf
+
+      - name: Upload PDF test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-report
+          path: e2e/reports/test-report.pdf
+          retention-days: 30
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots
+          path: e2e/screenshots/
+          retention-days: 7
+          if-no-files-found: ignore
 
       - name: Stop services
         if: always()

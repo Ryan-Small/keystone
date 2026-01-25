@@ -107,14 +107,30 @@ just test-frontend
 
 ```bash
 # With Docker (recommended)
-just dev-bg           # Start services in background
+just dev -d           # Start services in background
 just e2e              # Run with visible browser
 just e2e-headless     # Run headless
+just e2e-report       # Run with HTML report
 just down             # Stop services
 
 # Manual (requires backend + frontend running)
 just e2e
+
+# Advanced options
+just e2e                        # Screenshots "Then" steps by default
+SCREENSHOT_STEPS=all just e2e   # Screenshot every step (debugging)
+SCREENSHOT_STEPS=false just e2e # No step screenshots
 ```
+
+**Screenshots & Reports:**
+- Screenshots automatically captured on test failures → `e2e/screenshots/`
+- "Then" step screenshots captured by default (configurable with `SCREENSHOT_STEPS`)
+- **PDF reports for change management**: `just e2e-pdf`
+  - Professional PDF with title page, test summary, and sign-off section
+  - Screenshots embedded with each scenario
+  - Single file ready to attach to change requests
+  - Output: `e2e/reports/test-report.pdf`
+- CI uploads PDF report as artifact (30-day retention)
 
 ## CI/CD
 
