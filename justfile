@@ -97,9 +97,6 @@ e2e-pdf headless="true":
     uv run python generate_pdf_report.py
     cd ..
     echo "PDF report generated: e2e/reports/test-report.pdf"
-    if command -v open &> /dev/null; then \
-        open e2e/reports/test-report.pdf; \
-    fi
 
 # =============================================================================
 # Installation
