@@ -1,0 +1,35 @@
+name: Task
+description: Infrastructure, tooling, dependencies, or technical debt
+title: ""
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe what needs to be done and why
+      placeholder: Describe the work
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Describe the impact of doing (or not doing) this work
+      placeholder: How does this improve the project?
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Tasks
+      description: Provide a breakdown of work to be done
+      placeholder: |
+        - [ ] Task 1
+        - [ ] Task 2
+        - [ ] Task 3
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Provide links, references, or other relevant information

@@ -1,0 +1,47 @@
+name: Feature Request
+description: Propose a new feature or enhancement
+title: ""
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Describe the problem this feature solves
+      placeholder: As a [user type], I want [goal] so that [benefit]
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the feature or enhancement
+      placeholder: What should the solution look like?
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Define acceptance criteria using Gherkin format
+      placeholder: |
+        Scenario: [Feature description]
+          Given [precondition]
+          When [action]
+          Then [expected outcome]
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe other approaches considered
+      placeholder: Are there workarounds or alternative solutions?
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Provide screenshots, mockups, links, or other relevant information
