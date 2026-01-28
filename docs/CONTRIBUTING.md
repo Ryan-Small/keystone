@@ -1,5 +1,7 @@
 # Contributing to Keystone
 
+This guide covers the practical steps for contributing to this project. For background on the practices and principles demonstrated here, see [OVERVIEW.md](OVERVIEW.md).
+
 ## Pull Request Workflow
 
 ### 1. Create an Issue First
@@ -15,7 +17,11 @@ issue/<issue-number>-<short-description>
 
 Example: `issue/42-add-user-authentication`
 
-### 3. Commit Conventions
+### 3. Commit Signing
+
+All commits must be cryptographically signed. See [GitHub's commit signing documentation](https://docs.github.com/en/authentication/managing-commit-signature-verification) for setup instructions.
+
+### 4. Commit Conventions
 Follow conventional commit format:
 ```
 type(scope): description
@@ -28,15 +34,19 @@ deps(python): update fastapi to 0.115.0
 
 Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `deps`
 
-### 4. Before Submitting PR
+### 6. Before Submitting PR
 - Run tests locally: `just test`
 - Ensure code follows project style (linting will be automated soon)
+- Ensure commits are signed
 - Link PR to issue: Use "Closes #123" in PR description
 
-### 5. PR Requirements
+### 7. PR Requirements
 - All CI checks must pass (backend tests, frontend tests, E2E tests)
 - Linear history required (squash or rebase merges only)
 - No direct pushes to main
+- Branch must be up to date with main before merging
+
+See [OVERVIEW.md](OVERVIEW.md#branch-protection) for details on branch protection settings.
 
 ## Automated Dependency Updates (Dependabot)
 
