@@ -1,6 +1,11 @@
 # Keystone
 
-Full-stack greeting application with BDD E2E testing.
+An example full-stack application demonstrating production-grade software development practices including BDD workflows, CI/CD pipelines, and automated quality gates.
+
+## Documentation
+
+- **[Overview](docs/OVERVIEW.md)** - Architecture, practices, and principles demonstrated
+- **[Contributing](docs/CONTRIBUTING.md)** - Workflow guide for contributors
 
 ## Prerequisites
 
