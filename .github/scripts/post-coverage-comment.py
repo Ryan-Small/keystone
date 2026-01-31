@@ -85,29 +85,17 @@ def format_coverage_comment(backend_files: dict, frontend_files: dict) -> str:
 
     comment = "## Code Coverage Report\n\n"
 
-    # Overall summary
-    comment += "### Overall Coverage\n\n"
+    # Total section
+    comment += "### Total\n\n"
     comment += f"| Lines | Functions | Branches |\n"
     comment += f"|-------|-----------|----------|\n"
     comment += f"| {overall_totals['lines']:.2f}% | {overall_totals['funcs']:.2f}% | {overall_totals['branches']:.2f}% |\n\n"
 
-    # Backend section
-    comment += "### Backend Coverage\n\n"
-    comment += f"| Lines | Functions | Branches |\n"
-    comment += f"|-------|-----------|----------|\n"
-    comment += f"| {backend_totals['lines']:.2f}% | {backend_totals['funcs']:.2f}% | {backend_totals['branches']:.2f}% |\n\n"
+    # Backend section with file breakdown
+    comment += "### Backend\n\n"
+    comment += f"**Total:** {backend_totals['lines']:.2f}% lines | {backend_totals['funcs']:.2f}% functions | {backend_totals['branches']:.2f}% branches\n\n"
 
-    # Frontend section
-    comment += "### Frontend Coverage\n\n"
-    comment += f"| Lines | Functions | Branches |\n"
-    comment += f"|-------|-----------|----------|\n"
-    comment += f"| {frontend_totals['lines']:.2f}% | {frontend_totals['funcs']:.2f}% | {frontend_totals['branches']:.2f}% |\n\n"
-
-    comment += "<details>\n<summary>View detailed file coverage</summary>\n\n"
-
-    # Backend files detail
     if backend_files:
-        comment += "#### Backend Files\n\n"
         comment += "| File | Lines | Functions | Branches |\n"
         comment += "|------|-------|-----------|----------|\n"
         for file, stats in sorted(backend_files.items()):
@@ -115,17 +103,16 @@ def format_coverage_comment(backend_files: dict, frontend_files: dict) -> str:
             comment += f"| {filename} | {stats['lines']:.2f}% | {stats['funcs']:.2f}% | {stats['branches']:.2f}% |\n"
         comment += "\n"
 
-    # Frontend files detail
+    # Frontend section with file breakdown
+    comment += "### Frontend\n\n"
+    comment += f"**Total:** {frontend_totals['lines']:.2f}% lines | {frontend_totals['funcs']:.2f}% functions | {frontend_totals['branches']:.2f}% branches\n\n"
+
     if frontend_files:
-        comment += "#### Frontend Files\n\n"
         comment += "| File | Lines | Functions | Branches |\n"
         comment += "|------|-------|-----------|----------|\n"
         for file, stats in sorted(frontend_files.items()):
             filename = Path(file).name
             comment += f"| {filename} | {stats['lines']:.2f}% | {stats['funcs']:.2f}% | {stats['branches']:.2f}% |\n"
-        comment += "\n"
-
-    comment += "</details>\n"
 
     return comment
 
