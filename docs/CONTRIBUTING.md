@@ -89,19 +89,28 @@ Dependabot automatically creates PRs for dependency updates:
 - **Schedule**: Every Monday
 - **Grouping**: Minor and patch updates grouped together, major updates separate
 - **Testing**: CI runs automatically on all Dependabot PRs
+- **Auto-merge**: Minor and patch updates merge automatically after CI passes
 
-### Reviewing Dependabot PRs
+### Auto-Merge Behavior
 
-**For patch and minor updates**:
-1. Check that CI passes (green checkmarks)
-2. Review changelog/release notes (linked in PR description)
-3. Merge if no breaking changes
+**Minor and patch updates** (automatic):
+1. Dependabot creates PR
+2. CI runs automatically
+3. If all checks pass, PR is auto-approved and merged
+4. No manual intervention needed
 
-**For major version updates**:
+**Major version updates** (manual review required):
 1. Review breaking changes carefully
 2. Test locally if needed
 3. Update code to handle breaking changes
-4. Merge when ready
+4. Manually approve and merge when ready
+
+### Reviewing Dependabot PRs
+
+You can still review auto-merge PRs before they merge:
+- View the PR while CI is running
+- Check changelog/release notes (linked in PR description)
+- If issues found, close the PR to prevent auto-merge
 
 ### Skipping Updates
 If an update isn't needed:
