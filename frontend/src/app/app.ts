@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import type { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
