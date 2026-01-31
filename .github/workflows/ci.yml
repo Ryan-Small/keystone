@@ -208,27 +208,8 @@ jobs:
           name: frontend-coverage-lcov
           path: ./
 
-      - name: Combine coverage files
-        run: cat coverage.lcov lcov.info > combined-coverage.lcov
-
-      - name: Post combined coverage comment
-        uses: romeovs/lcov-reporter-action@v0.3.1
-        with:
-          lcov-file: combined-coverage.lcov
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          title: '### 📊 Overall Coverage'
-          delete-old-comments: true
-
-      - name: Post backend coverage comment
-        uses: romeovs/lcov-reporter-action@v0.3.1
-        with:
-          lcov-file: coverage.lcov
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          title: '### 🐍 Backend Coverage'
-
-      - name: Post frontend coverage comment
-        uses: romeovs/lcov-reporter-action@v0.3.1
-        with:
-          lcov-file: lcov.info
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          title: '### 🎨 Frontend Coverage'
+      - name: Post coverage comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: python3 .github/scripts/post-coverage-comment.py
