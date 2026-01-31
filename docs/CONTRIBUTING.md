@@ -41,13 +41,18 @@ just pre-commit-install
 # Format all code (auto-fix)
 just fmt
 
-# Check linting without auto-fix (same as CI)
+# Check linting and type-check without auto-fix (same as CI)
 just lint
 ```
 
+**What `just lint` checks:**
+- Python: Ruff formatting and linting
+- Frontend: ESLint, Prettier, and TypeScript type checking
+
 **CI Requirements:**
-- All PRs must pass linting checks
+- All PRs must pass linting and type checks
 - If linting fails, run `just fmt` locally and push changes
+- If type checking fails, fix the TypeScript errors manually
 
 ### 5. Commit Conventions
 Follow conventional commit format:
