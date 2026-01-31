@@ -8,6 +8,13 @@ backend/venv/
 e2e/.venv/
 e2e/venv/
 
+# Coverage
+backend/.coverage
+backend/htmlcov/
+backend/coverage.lcov
+backend/coverage.json
+frontend/coverage/
+
 # Node
 frontend/node_modules/
 frontend/dist/

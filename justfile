@@ -50,15 +50,15 @@ test: test-backend test-frontend e2e-headless
 
 # Run backend unit tests
 # Examples:
-#   just test-backend           # All tests
-#   just test-backend -k hello  # Filter by name
-#   just test-backend -vv       # Very verbose
+#   just test-backend           # All tests with coverage
+#   just test-backend -k hello  # Filter by name with coverage
+#   just test-backend --no-cov  # Skip coverage (faster iteration)
 test-backend +FLAGS="-v":
     cd backend && uv run pytest {{FLAGS}}
 
 # Run frontend unit tests
 # Examples:
-#   just test-frontend       # Run all tests
+#   just test-frontend       # Run all tests with coverage
 #   just test-frontend --ui  # Run with UI
 test-frontend +FLAGS="":
     cd frontend && npm test {{FLAGS}}
@@ -126,8 +126,8 @@ install-e2e:
 #   just clean  # Remove build artifacts and containers
 clean:
     docker compose down -v
-    rm -rf backend/.venv backend/__pycache__ backend/.pytest_cache
-    rm -rf frontend/node_modules frontend/dist frontend/.angular
+    rm -rf backend/.venv backend/__pycache__ backend/.pytest_cache backend/.coverage backend/htmlcov backend/coverage.lcov backend/coverage.json
+    rm -rf frontend/node_modules frontend/dist frontend/.angular frontend/coverage
     rm -rf e2e/.venv e2e/reports e2e/screenshots
 
 # Rebuild Docker images

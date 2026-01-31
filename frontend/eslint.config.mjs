@@ -6,6 +6,9 @@ import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 
 export default tseslint.config(
   {
+    ignores: ['coverage/**'],
+  },
+  {
     files: ['**/*.ts'],
     extends: [
       js.configs.recommended,
