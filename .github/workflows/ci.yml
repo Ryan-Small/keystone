@@ -208,11 +208,12 @@ jobs:
           name: frontend-coverage-lcov
           path: ./
 
+      - name: Combine coverage files
+        run: cat coverage.lcov lcov.info > combined-coverage.lcov
+
       - name: Post coverage comment
         uses: romeovs/lcov-reporter-action@v0.3.1
         with:
-          lcov-file: |
-            coverage.lcov
-            lcov.info
+          lcov-file: combined-coverage.lcov
           github-token: ${{ secrets.GITHUB_TOKEN }}
           delete-old-comments: true
