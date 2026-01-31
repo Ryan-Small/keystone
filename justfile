@@ -137,6 +137,46 @@ clean:
 rebuild +FLAGS="--no-cache":
     docker compose build {{FLAGS}}
 
-# Run linter/formatter (placeholder for future)
-lint:
-    @echo "Linting not yet configured"
+# =============================================================================
+# Linting and Formatting
+# =============================================================================
+
+# Run all linters (check only, no auto-fix)
+lint: lint-backend lint-frontend
+
+# Run all formatters (auto-fix)
+fmt: fmt-backend fmt-frontend
+
+# Lint backend Python code (check only)
+lint-backend:
+    @echo "Linting backend..."
+    cd backend && uv run ruff check .
+    @echo "Linting e2e..."
+    cd e2e && uv run ruff check .
+
+# Lint frontend TypeScript/Angular code (check only)
+lint-frontend:
+    @echo "Checking Prettier formatting..."
+    cd frontend && npm run format:check
+    @echo "Running ESLint..."
+    cd frontend && npm run lint
+
+# Format backend Python code (auto-fix)
+fmt-backend:
+    @echo "Formatting backend..."
+    cd backend && uv run ruff format . && uv run ruff check --fix .
+    @echo "Formatting e2e..."
+    cd e2e && uv run ruff format . && uv run ruff check --fix .
+
+# Format frontend code (auto-fix)
+fmt-frontend:
+    @echo "Running Prettier..."
+    cd frontend && npm run format
+    @echo "Running ESLint --fix..."
+    cd frontend && npm run lint:fix
+
+# Install pre-commit hooks (one-time setup)
+pre-commit-install:
+    @command -v pre-commit >/dev/null 2>&1 || { echo "Installing pre-commit..."; pip install pre-commit; }
+    pre-commit install
+    @echo "Pre-commit hooks installed successfully"

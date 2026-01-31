@@ -21,7 +21,40 @@ Example: `issue/42-add-user-authentication`
 
 All commits must be cryptographically signed. See [GitHub's commit signing documentation](https://docs.github.com/en/authentication/managing-commit-signature-verification) for setup instructions.
 
-### 4. Commit Conventions
+### 4. Pre-commit Hooks (Optional but Recommended)
+
+Pre-commit hooks automatically format and lint your code before each commit.
+
+**One-time setup:**
+```bash
+just pre-commit-install
+```
+
+**What it does:**
+- Runs Ruff formatter and linter on Python files
+- Runs Prettier and ESLint on frontend files
+- Checks for trailing whitespace, merge conflicts, large files
+- Auto-fixes most issues (re-stage files after fixes)
+
+**Manual formatting:**
+```bash
+# Format all code (auto-fix)
+just fmt
+
+# Check linting and type-check without auto-fix (same as CI)
+just lint
+```
+
+**What `just lint` checks:**
+- Python: Ruff formatting and linting
+- Frontend: ESLint, Prettier, and TypeScript type checking
+
+**CI Requirements:**
+- All PRs must pass linting and type checks
+- If linting fails, run `just fmt` locally and push changes
+- If type checking fails, fix the TypeScript errors manually
+
+### 5. Commit Conventions
 Follow conventional commit format:
 ```
 type(scope): description
@@ -36,12 +69,13 @@ Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `deps`
 
 ### 6. Before Submitting PR
 - Run tests locally: `just test`
-- Ensure code follows project style (linting will be automated soon)
+- Run linters: `just lint` (or install pre-commit hooks)
+- Fix any linting issues: `just fmt`
 - Ensure commits are signed
 - Link PR to issue: Use "Closes #123" in PR description
 
 ### 7. PR Requirements
-- All CI checks must pass (backend tests, frontend tests, E2E tests)
+- All CI checks must pass (lint, backend tests, frontend tests, E2E tests)
 - Linear history required (squash or rebase merges only)
 - No direct pushes to main
 - Branch must be up to date with main before merging
