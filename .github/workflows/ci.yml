@@ -76,14 +76,14 @@ jobs:
 
       - name: Upload backend coverage LCOV
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: backend-coverage-lcov
           path: backend/coverage.lcov
 
       - name: Upload backend coverage HTML
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: backend-coverage-html
           path: backend/htmlcov/
@@ -113,14 +113,14 @@ jobs:
 
       - name: Upload frontend coverage LCOV
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: frontend-coverage-lcov
           path: frontend/coverage/keystone-ui/lcov.info
 
       - name: Upload frontend coverage HTML
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: frontend-coverage-html
           path: frontend/coverage/
@@ -167,7 +167,7 @@ jobs:
 
       - name: Upload PDF test report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: e2e-test-report
           path: e2e/reports/test-report.pdf
@@ -175,7 +175,7 @@ jobs:
 
       - name: Upload screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: e2e-screenshots
           path: e2e/screenshots/
