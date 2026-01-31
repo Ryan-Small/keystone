@@ -93,11 +93,11 @@ def format_coverage_comment(backend_files: dict, frontend_files: dict) -> str:
 
     # Backend section with file breakdown
     comment += "### Backend\n\n"
-    comment += f"**Total:** {backend_totals['lines']:.2f}% lines | {backend_totals['funcs']:.2f}% functions | {backend_totals['branches']:.2f}% branches\n\n"
+    comment += "| File | Lines | Functions | Branches |\n"
+    comment += "|------|-------|-----------|----------|\n"
+    comment += f"| **Total** | **{backend_totals['lines']:.2f}%** | **{backend_totals['funcs']:.2f}%** | **{backend_totals['branches']:.2f}%** |\n"
 
     if backend_files:
-        comment += "| File | Lines | Functions | Branches |\n"
-        comment += "|------|-------|-----------|----------|\n"
         for file, stats in sorted(backend_files.items()):
             filename = Path(file).name
             comment += f"| {filename} | {stats['lines']:.2f}% | {stats['funcs']:.2f}% | {stats['branches']:.2f}% |\n"
@@ -105,11 +105,11 @@ def format_coverage_comment(backend_files: dict, frontend_files: dict) -> str:
 
     # Frontend section with file breakdown
     comment += "### Frontend\n\n"
-    comment += f"**Total:** {frontend_totals['lines']:.2f}% lines | {frontend_totals['funcs']:.2f}% functions | {frontend_totals['branches']:.2f}% branches\n\n"
+    comment += "| File | Lines | Functions | Branches |\n"
+    comment += "|------|-------|-----------|----------|\n"
+    comment += f"| **Total** | **{frontend_totals['lines']:.2f}%** | **{frontend_totals['funcs']:.2f}%** | **{frontend_totals['branches']:.2f}%** |\n"
 
     if frontend_files:
-        comment += "| File | Lines | Functions | Branches |\n"
-        comment += "|------|-------|-----------|----------|\n"
         for file, stats in sorted(frontend_files.items()):
             filename = Path(file).name
             comment += f"| {filename} | {stats['lines']:.2f}% | {stats['funcs']:.2f}% | {stats['branches']:.2f}% |\n"
