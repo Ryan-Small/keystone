@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 from playwright.sync_api import sync_playwright
 
 
@@ -44,11 +45,11 @@ def _sanitize_filename(name: str) -> str:
     # Replace invalid characters with underscores
     invalid_chars = '":<>|*?\r\n'
     for char in invalid_chars:
-        name = name.replace(char, '_')
+        name = name.replace(char, "_")
     # Replace spaces with underscores and collapse multiple underscores
-    name = name.replace(' ', '_')
-    while '__' in name:
-        name = name.replace('__', '_')
+    name = name.replace(" ", "_")
+    while "__" in name:
+        name = name.replace("__", "_")
     return name
 
 
@@ -60,9 +61,8 @@ def after_step(context, step) -> None:
     # - SCREENSHOT_STEPS=false: No step screenshots
     screenshot_mode = os.getenv("SCREENSHOT_STEPS", "then").lower()
 
-    should_screenshot = (
-        screenshot_mode == "all" or
-        (screenshot_mode == "then" and step.keyword.strip().lower() == "then")
+    should_screenshot = screenshot_mode == "all" or (
+        screenshot_mode == "then" and step.keyword.strip().lower() == "then"
     )
 
     if should_screenshot:

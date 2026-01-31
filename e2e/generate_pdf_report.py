@@ -8,7 +8,7 @@ professional PDF report suitable for change management approval.
 
 import json
 import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -80,16 +80,14 @@ class TestReportGenerator:
     def _add_title_page(self, data: dict[str, Any]) -> None:
         """Add title page with test summary."""
         self.story.append(Spacer(1, 2 * inch))
-        self.story.append(
-            Paragraph("End-to-End Test Report", self.styles["CustomTitle"])
-        )
+        self.story.append(Paragraph("End-to-End Test Report", self.styles["CustomTitle"]))
         self.story.append(Spacer(1, 0.5 * inch))
 
         # Test metadata
         metadata = [
             ["Project:", "Keystone"],
             ["Test Type:", "E2E BDD Tests"],
-            ["Test Date:", datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
+            ["Test Date:", datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")],
             ["Environment:", "Development"],
         ]
 
@@ -124,7 +122,7 @@ class TestReportGenerator:
             ["Failed:", str(failed_scenarios)],
             [
                 "Success Rate:",
-                f"{(passed_scenarios/total_scenarios*100):.1f}%"
+                f"{(passed_scenarios / total_scenarios * 100):.1f}%"
                 if total_scenarios > 0
                 else "N/A",
             ],
@@ -152,14 +150,16 @@ class TestReportGenerator:
         # Replace invalid characters with underscores
         invalid_chars = '":<>|*?\r\n'
         for char in invalid_chars:
-            name = name.replace(char, '_')
+            name = name.replace(char, "_")
         # Replace spaces with underscores and collapse multiple underscores
-        name = name.replace(' ', '_')
-        while '__' in name:
-            name = name.replace('__', '_')
+        name = name.replace(" ", "_")
+        while "__" in name:
+            name = name.replace("__", "_")
         return name
 
-    def _find_screenshot(self, scenario_name: str, step_keyword: str, step_name: str) -> Path | None:
+    def _find_screenshot(
+        self, scenario_name: str, step_keyword: str, step_name: str
+    ) -> Path | None:
         """Find screenshot for a step."""
         # Match the naming pattern from environment.py
         step_screenshot = f"{scenario_name}_{step_keyword}_{step_name}"
@@ -175,16 +175,12 @@ class TestReportGenerator:
     def _add_scenario(self, scenario: dict[str, Any]) -> None:
         """Add a scenario with its steps and screenshots."""
         scenario_name = scenario["name"]
-        self.story.append(
-            Paragraph(f"Scenario: {scenario_name}", self.styles["ScenarioTitle"])
-        )
+        self.story.append(Paragraph(f"Scenario: {scenario_name}", self.styles["ScenarioTitle"]))
         self.story.append(Spacer(1, 0.1 * inch))
 
         # Scenario description if available
         if scenario.get("description"):
-            self.story.append(
-                Paragraph(scenario["description"], self.styles["Normal"])
-            )
+            self.story.append(Paragraph(scenario["description"], self.styles["Normal"]))
             self.story.append(Spacer(1, 0.1 * inch))
 
         # Steps
@@ -194,9 +190,7 @@ class TestReportGenerator:
             status = step["result"]["status"]
 
             # Step text with status indicator
-            status_color = (
-                colors.green if status == "passed" else colors.red
-            )
+            status_color = colors.green if status == "passed" else colors.red
             step_text = f'<font color="{status_color.hexval()}">●</font> {keyword} {name}'
             self.story.append(Paragraph(step_text, self.styles["StepText"]))
 
@@ -225,18 +219,14 @@ class TestReportGenerator:
                     fontName="Courier",
                 )
                 error_text = step["result"]["error_message"][:500]  # Truncate long errors
-                self.story.append(
-                    Paragraph(f"<b>Error:</b> {error_text}", error_style)
-                )
+                self.story.append(Paragraph(f"<b>Error:</b> {error_text}", error_style))
 
         self.story.append(Spacer(1, 0.3 * inch))
 
     def _add_approval_section(self) -> None:
         """Add change management approval section."""
         self.story.append(PageBreak())
-        self.story.append(
-            Paragraph("Test Approval & Sign-off", self.styles["SectionHeader"])
-        )
+        self.story.append(Paragraph("Test Approval & Sign-off", self.styles["SectionHeader"]))
         self.story.append(Spacer(1, 0.2 * inch))
 
         approval_data = [
@@ -261,7 +251,12 @@ class TestReportGenerator:
                     ("ALIGN", (0, 0), (-1, -1), "LEFT"),
                     ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                     ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
-                    ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F8F9FA")]),
+                    (
+                        "ROWBACKGROUNDS",
+                        (0, 1),
+                        (-1, -1),
+                        [colors.white, colors.HexColor("#F8F9FA")],
+                    ),
                     ("BOTTOMPADDING", (0, 0), (-1, -1), 12),
                     ("TOPPADDING", (0, 0), (-1, -1), 12),
                 ]
@@ -272,7 +267,7 @@ class TestReportGenerator:
     def generate(self) -> None:
         """Generate the PDF report."""
         # Load test results
-        with open(self.json_path) as f:
+        with Path(self.json_path).open() as f:
             data = json.load(f)
 
         # Create PDF
@@ -290,9 +285,7 @@ class TestReportGenerator:
 
         # Add feature description
         feature = data[0]
-        self.story.append(
-            Paragraph(f"Feature: {feature['name']}", self.styles["SectionHeader"])
-        )
+        self.story.append(Paragraph(f"Feature: {feature['name']}", self.styles["SectionHeader"]))
         if feature.get("description"):
             # Description can be a list or string
             desc = feature["description"]
