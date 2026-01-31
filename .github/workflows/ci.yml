@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install just
-        uses: extractions/setup-just@v2
+        uses: extractions/setup-just@v3
 
       # Python linting
       - name: Install uv
@@ -56,7 +56,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install just
-        uses: extractions/setup-just@v2
+        uses: extractions/setup-just@v3
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -96,7 +96,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install just
-        uses: extractions/setup-just@v2
+        uses: extractions/setup-just@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -134,7 +134,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install just
-        uses: extractions/setup-just@v2
+        uses: extractions/setup-just@v3
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
