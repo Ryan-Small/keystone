@@ -140,5 +140,39 @@ just e2e-pdf
 - Bug fixes should include regression tests using Gherkin format from issue
 - Feature acceptance criteria should convert directly to E2E tests
 
+## Code Coverage
+
+### Viewing Coverage Locally
+
+Coverage is automatically tracked when running tests:
+
+```bash
+# Backend coverage
+just test-backend
+# Opens htmlcov/index.html in browser to see detailed report
+
+# Frontend coverage
+just test-frontend
+# Opens coverage/index.html in browser to see detailed report
+```
+
+### Coverage in PRs
+
+- CI automatically generates coverage reports
+- Coverage summary posted as PR comment
+- Shows line and branch coverage percentages
+- Links to detailed HTML reports in CI artifacts
+- No blocking thresholds - coverage is for visibility only
+
+### Skipping Coverage (Faster Iteration)
+
+```bash
+# Backend: skip coverage for faster test runs
+just test-backend --no-cov
+
+# Frontend: coverage always enabled (minimal overhead)
+just test-frontend
+```
+
 ## Questions?
 For questions, ideas, or discussions, please open an issue using the appropriate template.
