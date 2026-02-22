@@ -1,6 +1,6 @@
 import pytest
 
-from utils import sanitize_filename
+from utils import ScreenshotMode, sanitize_filename
 
 
 class TestSanitizeFilename:
@@ -42,3 +42,35 @@ class TestSanitizeFilename:
     )
     def test_real_world_scenario_names(self, input_name: str, expected: str) -> None:
         assert sanitize_filename(input_name) == expected
+
+
+class TestScreenshotMode:
+    def test_enum_values(self) -> None:
+        assert ScreenshotMode.ALL.value == "all"
+        assert ScreenshotMode.THEN.value == "then"
+        assert ScreenshotMode.DISABLED.value == "false"
+
+    def test_from_env_defaults_to_then(self) -> None:
+        assert ScreenshotMode.from_env(None) is ScreenshotMode.THEN
+
+    def test_from_env_case_insensitive(self) -> None:
+        assert ScreenshotMode.from_env("ALL") is ScreenshotMode.ALL
+        assert ScreenshotMode.from_env("Then") is ScreenshotMode.THEN
+        assert ScreenshotMode.from_env("FALSE") is ScreenshotMode.DISABLED
+
+    def test_from_env_invalid_defaults_to_then(self) -> None:
+        assert ScreenshotMode.from_env("invalid") is ScreenshotMode.THEN
+
+    def test_should_capture_all_mode(self) -> None:
+        assert ScreenshotMode.ALL.should_capture("given") is True
+        assert ScreenshotMode.ALL.should_capture("then") is True
+        assert ScreenshotMode.ALL.should_capture("when") is True
+
+    def test_should_capture_then_mode(self) -> None:
+        assert ScreenshotMode.THEN.should_capture("then") is True
+        assert ScreenshotMode.THEN.should_capture("given") is False
+        assert ScreenshotMode.THEN.should_capture("when") is False
+
+    def test_should_capture_disabled_mode(self) -> None:
+        assert ScreenshotMode.DISABLED.should_capture("then") is False
+        assert ScreenshotMode.DISABLED.should_capture("given") is False

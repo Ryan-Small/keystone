@@ -3,7 +3,7 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-from utils import sanitize_filename
+from utils import ScreenshotMode, sanitize_filename
 
 
 def before_all(context) -> None:
@@ -44,17 +44,9 @@ def after_scenario(context, scenario) -> None:
 
 def after_step(context, step) -> None:
     """Take screenshot after each step if configured."""
-    # Screenshot modes:
-    # - SCREENSHOT_STEPS=all: Capture all steps
-    # - SCREENSHOT_STEPS=then: Capture only "Then" steps (default)
-    # - SCREENSHOT_STEPS=false: No step screenshots
-    screenshot_mode = os.getenv("SCREENSHOT_STEPS", "then").lower()
+    screenshot_mode = ScreenshotMode.from_env(os.getenv("SCREENSHOT_STEPS"))
 
-    should_screenshot = screenshot_mode == "all" or (
-        screenshot_mode == "then" and step.keyword.strip().lower() == "then"
-    )
-
-    if should_screenshot:
+    if screenshot_mode.should_capture(step.keyword.strip()):
         # Save to screenshots directory
         step_name = f"{context.scenario_name}_{step.keyword.strip()}_{step.name}"
         screenshot_name = f"{sanitize_filename(step_name)}.png"
