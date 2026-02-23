@@ -9,6 +9,12 @@ def client() -> TestClient:
     return TestClient(app)
 
 
+def test_root_endpoint(client: TestClient) -> None:
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.json() == {"message": "Hello World"}
+
+
 def test_say_hello_empty_name(client: TestClient) -> None:
     response = client.get("/hello/")
     assert response.status_code == 404

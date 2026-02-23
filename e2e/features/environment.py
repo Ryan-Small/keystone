@@ -3,6 +3,8 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
+from utils import ScreenshotMode, sanitize_filename
+
 
 def before_all(context) -> None:
     """Setup before all tests."""
@@ -32,7 +34,7 @@ def after_scenario(context, scenario) -> None:
     """Cleanup after each scenario."""
     # Take screenshot on failure
     if scenario.status == "failed":
-        screenshot_name = f"{_sanitize_filename(context.scenario_name)}_FAILED.png"
+        screenshot_name = f"{sanitize_filename(context.scenario_name)}_FAILED.png"
         screenshot_path = context.screenshots_dir / screenshot_name
         context.page.screenshot(path=str(screenshot_path))
         print(f"Screenshot saved: {screenshot_path}")
@@ -40,35 +42,14 @@ def after_scenario(context, scenario) -> None:
     context.page.close()
 
 
-def _sanitize_filename(name: str) -> str:
-    """Sanitize filename by removing invalid characters."""
-    # Replace invalid characters with underscores
-    invalid_chars = '":<>|*?\r\n'
-    for char in invalid_chars:
-        name = name.replace(char, "_")
-    # Replace spaces with underscores and collapse multiple underscores
-    name = name.replace(" ", "_")
-    while "__" in name:
-        name = name.replace("__", "_")
-    return name
-
-
 def after_step(context, step) -> None:
     """Take screenshot after each step if configured."""
-    # Screenshot modes:
-    # - SCREENSHOT_STEPS=all: Capture all steps
-    # - SCREENSHOT_STEPS=then: Capture only "Then" steps (default)
-    # - SCREENSHOT_STEPS=false: No step screenshots
-    screenshot_mode = os.getenv("SCREENSHOT_STEPS", "then").lower()
+    screenshot_mode = ScreenshotMode.from_env(os.getenv("SCREENSHOT_STEPS"))
 
-    should_screenshot = screenshot_mode == "all" or (
-        screenshot_mode == "then" and step.keyword.strip().lower() == "then"
-    )
-
-    if should_screenshot:
+    if screenshot_mode.should_capture(step.keyword.strip()):
         # Save to screenshots directory
         step_name = f"{context.scenario_name}_{step.keyword.strip()}_{step.name}"
-        screenshot_name = f"{_sanitize_filename(step_name)}.png"
+        screenshot_name = f"{sanitize_filename(step_name)}.png"
         screenshot_path = context.screenshots_dir / screenshot_name
         context.page.screenshot(path=str(screenshot_path))
         print(f"Step screenshot saved: {screenshot_path}")
