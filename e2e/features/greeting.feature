@@ -13,3 +13,17 @@ Feature: Greeting Application
     When I enter "Alice" as my name
     And I click the greeting button
     Then I should see "Hello Alice" on the page
+
+  Scenario: Get greeting with special characters
+    Given the application is running
+    When I enter "José O'Brien" as my name
+    And I click the greeting button
+    Then I should see "Hello José O'Brien" on the page
+
+  Scenario: Get multiple greetings in sequence
+    Given the application is running
+    When I click the greeting button without entering a name
+    Then I should see "Hello World" on the page
+    When I enter "Bob" as my name
+    And I click the greeting button
+    Then I should see "Hello Bob" on the page
