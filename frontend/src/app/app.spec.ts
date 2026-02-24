@@ -8,6 +8,7 @@ interface AppSignals {
   name: WritableSignal<string>;
   greeting: WritableSignal<string>;
   error: WritableSignal<string>;
+  loading: WritableSignal<boolean>;
 }
 
 describe('App', () => {
@@ -122,6 +123,56 @@ describe('App', () => {
 
     const req = httpTesting.expectOne('/api/');
     req.flush({ message: 'Hello World' });
+  });
+
+  it('should set loading true during request and false after response', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    const signals = app as unknown as AppSignals;
+
+    app.getGreeting();
+    expect(signals.loading()).toBe(true);
+
+    const req = httpTesting.expectOne('/api/');
+    req.flush({ message: 'Hello World' });
+
+    expect(signals.loading()).toBe(false);
+  });
+
+  it('should set loading false after error', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    const signals = app as unknown as AppSignals;
+
+    app.getGreeting();
+    expect(signals.loading()).toBe(true);
+
+    const req = httpTesting.expectOne('/api/');
+    req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+
+    expect(signals.loading()).toBe(false);
+  });
+
+  it('should disable button while loading', () => {
+    const fixture = TestBed.createComponent(App);
+    const signals = fixture.componentInstance as unknown as AppSignals;
+
+    signals.loading.set(true);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const button = compiled.querySelector<HTMLButtonElement>('#greetButton');
+    expect(button?.disabled).toBe(true);
+  });
+
+  it('should render loading indicator while loading', () => {
+    const fixture = TestBed.createComponent(App);
+    (fixture.componentInstance as unknown as AppSignals).loading.set(true);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const indicator = compiled.querySelector('#loadingIndicator');
+    expect(indicator).toBeTruthy();
   });
 
   it('should render error message when error is set', () => {
