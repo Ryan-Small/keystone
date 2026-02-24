@@ -12,6 +12,10 @@
     <button (click)="getGreeting()" class="greet-button" id="greetButton">Get Greeting</button>
   </div>
 
+  @if (error()) {
+    <div class="error-message" id="errorMessage">{{ error() }}</div>
+  }
+
   @if (greeting()) {
     <div class="greeting-result" id="greetingResult">{{ greeting() }}</div>
   }

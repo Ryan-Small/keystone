@@ -13,19 +13,21 @@ export class App {
   protected readonly title = signal('Keystone Greeting App');
   protected name = signal('');
   protected greeting = signal('');
+  protected error = signal('');
 
   private readonly http = inject(HttpClient);
 
   getGreeting(): void {
+    this.error.set('');
     const nameValue = this.name();
-    if (!nameValue) {
-      this.http.get<{ message: string }>('/api/').subscribe((response) => {
+    const url = nameValue ? `/api/hello/${nameValue}` : '/api/';
+    this.http.get<{ message: string }>(url).subscribe({
+      next: (response) => {
         this.greeting.set(response.message);
-      });
-    } else {
-      this.http.get<{ message: string }>(`/api/hello/${nameValue}`).subscribe((response) => {
-        this.greeting.set(response.message);
-      });
-    }
+      },
+      error: () => {
+        this.error.set('Failed to fetch greeting');
+      },
+    });
   }
 }

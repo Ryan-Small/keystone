@@ -7,6 +7,7 @@ import { App } from './app';
 interface AppSignals {
   name: WritableSignal<string>;
   greeting: WritableSignal<string>;
+  error: WritableSignal<string>;
 }
 
 describe('App', () => {
@@ -95,5 +96,42 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const result = compiled.querySelector('#greetingResult');
     expect(result).toBeNull();
+  });
+
+  it('should set error signal on HTTP failure', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+
+    app.getGreeting();
+
+    const req = httpTesting.expectOne('/api/');
+    req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+
+    expect((app as unknown as AppSignals).error()).toBe('Failed to fetch greeting');
+  });
+
+  it('should clear error on new request', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    const signals = app as unknown as AppSignals;
+    signals.error.set('Previous error');
+
+    app.getGreeting();
+
+    expect(signals.error()).toBe('');
+
+    const req = httpTesting.expectOne('/api/');
+    req.flush({ message: 'Hello World' });
+  });
+
+  it('should render error message when error is set', () => {
+    const fixture = TestBed.createComponent(App);
+    (fixture.componentInstance as unknown as AppSignals).error.set('Something went wrong');
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const errorEl = compiled.querySelector('#errorMessage');
+    expect(errorEl).toBeTruthy();
+    expect(errorEl?.textContent).toContain('Something went wrong');
   });
 });
