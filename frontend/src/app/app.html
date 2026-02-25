@@ -9,8 +9,18 @@
       class="name-input"
       id="nameInput"
     />
-    <button (click)="getGreeting()" class="greet-button" id="greetButton">Get Greeting</button>
+    <button (click)="getGreeting()" class="greet-button" id="greetButton" [disabled]="loading()">
+      Get Greeting
+    </button>
   </div>
+
+  @if (loading()) {
+    <div class="loading-indicator" id="loadingIndicator">Loading...</div>
+  }
+
+  @if (error()) {
+    <div class="error-message" id="errorMessage">{{ error() }}</div>
+  }
 
   @if (greeting()) {
     <div class="greeting-result" id="greetingResult">{{ greeting() }}</div>

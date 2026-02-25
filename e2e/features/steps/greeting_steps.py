@@ -13,7 +13,8 @@ def step_app_running(context) -> None:
 @when("I click the greeting button without entering a name")
 def step_click_button_no_name(context) -> None:
     """Click the greet button with an empty name field to trigger the default greeting."""
-    context.page.click("#greetButton")
+    with context.page.expect_response(lambda r: "/api" in r.url):
+        context.page.click("#greetButton")
     context.page.wait_for_selector("#greetingResult")
 
 
@@ -26,7 +27,8 @@ def step_enter_name(context, name: str) -> None:
 @when("I click the greeting button")
 def step_click_button(context) -> None:
     """Click the greet button and wait for the API response to render."""
-    context.page.click("#greetButton")
+    with context.page.expect_response(lambda r: "/api" in r.url):
+        context.page.click("#greetButton")
     context.page.wait_for_selector("#greetingResult")
 
 
